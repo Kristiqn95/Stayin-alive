@@ -8,6 +8,14 @@ export default class Application extends EventEmitter {
     };
   }
 
+  _create(text) {
+    const message = document.createElement("div");
+    message.classList.add("message");
+    message.innerText = text;
+
+    document.querySelector(".main").appendChild(message);
+  }
+
   constructor() {
     super();
 
@@ -17,23 +25,9 @@ export default class Application extends EventEmitter {
     this._beat = new Beat();
 
     this._beat.addListener(Beat.events.BIT, () => {
-      if (count < lyrics.length) {
-        document
-          .querySelector(".main")
-          .appendChild(this._create(lyrics[count]));
-      } else {
-        this._beat.removeListener(Beat.events.BIT);
-      }
-      count++;
+      this._create(lyrics[count++ % lyrics.length]);
     });
 
     this.emit(Application.events.READY);
-  }
-
-  _create(lyricText) {
-    const message = document.createElement("div");
-    message.classList.add("message");
-    message.innerText = lyricText;
-    return message;
   }
 }
